@@ -1,0 +1,80 @@
+.todo-container {
+    margin-top: 2rem;
+}
+
+.todo-section {
+    margin-bottom: 2rem;
+}
+
+.todo-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.todo-form input {
+    flex: 1;
+}
+
+.todo-list {
+    list-style: none;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    background: var(--container-bg);
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px var(--box-shadow);
+    border: 1px solid var(--input-border);
+    transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+
+.todo-item:hover {
+    box-shadow: 0 2px 5px var(--box-shadow);
+}
+
+.todo-item.completed {
+    opacity: 0.7;
+    text-decoration: line-through;
+}
+
+.todo-checkbox {
+    margin-right: 1rem;
+    transform: scale(1.2);
+    accent-color: var(--primary-color);
+}
+
+.todo-title {
+    flex: 1;
+    margin-right: 1rem;
+    color: var(--text-color);
+}
+
+.todo-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.section-title {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.edit-form {
+    display: none;
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.edit-form.active {
+    display: flex;
+}
+
+.todo-title.hidden {
+    display: none;
+}
