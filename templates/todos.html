@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}My Todos{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .todo-container {
+        margin-top: 2rem;
+    }
+
+    .todo-section {
+        margin-bottom: 2rem;
+    }
+
+    .todo-form {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .todo-form input {
+        flex: 1;
+    }
+
+    .todo-list {
+        list-style: none;
+    }
+
+    .todo-item {
+        display: flex;
+        align-items: center;
+        background: white;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .todo-item.completed {
+        opacity: 0.7;
+        text-decoration: line-through;
+    }
+
+    .todo-checkbox {
+        margin-right: 1rem;
+        transform: scale(1.2);
+    }
+
+    .todo-title {
+        flex: 1;
+        margin-right: 1rem;
+    }
+
+    .todo-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .section-title {
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .edit-form {
+        display: none;
+        flex: 1;
+        margin-right: 1rem;
+    }
+
+    .edit-form.active {
+        display: flex;
+    }
+
+    .todo-title.hidden {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="nav">
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+<h1>My To Do List</h1>
+
+<form class="todo-form" action="{{ url_for('add_todo') }}" method="POST">
+    <input type="text" name="title" placeholder="Add a new todo..." required>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+<div class="todo-container">
+    <div class="todo-section">
+        <h2 class="section-title">Active Tasks</h2>
+        <ul class="todo-list">
+            {% for todo in active_todos %}
+            <li class="todo-item">
+                <input type="checkbox" class="todo-checkbox" 
+                       onclick="window.location.href='{{ url_for('toggle_todo', id=todo.id) }}'"
+                       {% if todo.completed %}checked{% endif %}>
+                <span class="todo-title">{{ todo.title }}</span>
+                <form class="edit-form" action="{{ url_for('update_todo', id=todo.id) }}" method="POST">
+                    <input type="text" name="title" value="{{ todo.title }}" required>
+                </form>
+                <div class="todo-actions">
+                    <button class="btn btn-primary" onclick="toggleEdit(this)">Edit</button>
+                    <a href="{{ url_for('delete_todo', id=todo.id) }}" class="btn btn-danger">Delete</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="todo-section">
+        <h2 class="section-title">Completed Tasks</h2>
+        <ul class="todo-list">
+            {% for todo in completed_todos %}
+            <li class="todo-item completed">
+                <input type="checkbox" class="todo-checkbox" 
+                       onclick="window.location.href='{{ url_for('toggle_todo', id=todo.id) }}'"
+                       {% if todo.completed %}checked{% endif %}>
+                <span class="todo-title">{{ todo.title }}</span>
+                <div class="todo-actions">
+                    <a href="{{ url_for('delete_todo', id=todo.id) }}" class="btn btn-danger">Delete</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+function toggleEdit(button) {
+    const todoItem = button.closest('.todo-item');
+    const titleSpan = todoItem.querySelector('.todo-title');
+    const editForm = todoItem.querySelector('.edit-form');
+    const input = editForm.querySelector('input');
+
+    if (editForm.classList.contains('active')) {
+        editForm.submit();
+    } else {
+        titleSpan.classList.add('hidden');
+        editForm.classList.add('active');
+        button.textContent = 'Save';
+        input.focus();
+    }
+}
+</script>
+{% endblock %}
